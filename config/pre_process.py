@@ -7,16 +7,26 @@ from torch.utils.data import Dataset
 from pytorch_transformers import BertTokenizer
 from sklearn.model_selection import train_test_split
 
-def tranform_train(train_inport, sentiment_class, train_outport, dev_outport):
+def tranform_trainset(train_inport, sentiment_class, train_outport, dev_outport):
     df = pd.read_excel(train_inport)
     df[sentiment_class] = df[sentiment_class].replace({'positive': 1, 'negative': 0})
     Train, Dev = train_test_split(df, test_size=0.3)
     Train.to_csv(train_outport, sep = '\n', index = False, header = False)
     Dev.to_csv(dev_outport, sep = '\n', index = False, header = False)
 
-def tranform_test(test_inport, test_outport):
+def tranform_testset(test_inport, test_outport):
     Test = pd.read_excel(test_inport)
     Test.to_csv(test_outport, sep = '\n', index = False, header = False)
+
+
+def prepare_data(text_left, aspect, text_right, tokenizer):
+    text_left = text_left.lower().strip()
+    text_right = text_right.lower().strip()
+    aspect = aspect.lower().strip()
+
+    text_raw_bert_indices = tokenizer.text_to_sequence("[CLS] " + text_left + " " + aspect + " " + text_right + " [SEP]")
+    aspect_bert_indices = tokenizer.text_to_sequence("[CLS] " + aspect + " [SEP]")
+    return text_raw_bert_indices, aspect_bert_indices
 
 def build_tokenizer(fnames, max_seq_len, dat_fname):
     if os.path.exists(dat_fname):

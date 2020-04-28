@@ -5,7 +5,7 @@ global_args = {
     "model_name": "aen_bert",
     "dataset": "logically",
     "trainset": "./data/train.csv",
-    "testset": "./data/dev.csv",
+    "devset": "./data/dev.csv",
     "state_dict_path": "state_dict/aen_bert_logically_val_temp",
     "optimizer": torch.optim.Adam,
     "initializer": torch.nn.init.xavier_uniform_,

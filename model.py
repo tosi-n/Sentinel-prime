@@ -1,5 +1,4 @@
 import logging
-import argparse
 import math
 import os
 import sys
@@ -15,7 +14,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, random_split, ConcatDataset
 
-from config.pre_process import build_tokenizer, build_embedding_matrix, Tokenizer4Bert, ABSADataset
+from config.pre_process import build_tokenizer, build_embedding_matrix, Tokenizer4Bert, ABSADataset, prepare_data
 
 from aen import CrossEntropyLoss_LSR, AEN_BERT
 
@@ -25,15 +24,6 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-
-def prepare_data(text_left, aspect, text_right, tokenizer):
-    text_left = text_left.lower().strip()
-    text_right = text_right.lower().strip()
-    aspect = aspect.lower().strip()
-
-    text_raw_bert_indices = tokenizer.text_to_sequence("[CLS] " + text_left + " " + aspect + " " + text_right + " [SEP]")
-    aspect_bert_indices = tokenizer.text_to_sequence("[CLS] " + aspect + " [SEP]")
-    return text_raw_bert_indices, aspect_bert_indices
 
     
 class tsc:
@@ -45,7 +35,7 @@ class tsc:
         self.model = model_name(bert).to(global_args['device'])
 
         self.trainset = ABSADataset(global_args['trainset'], tokenizer)
-        self.testset = ABSADataset(global_args['testset'], tokenizer)
+        self.devset = ABSADataset(global_args['devset'], tokenizer)
 
         # if global_args['device'] == 'cuda':
         #     logger.info('cuda memory allocated: {}'.format(torch.cuda.memory_allocated(device=global_args['device'].index)))
@@ -154,7 +144,7 @@ class tsc:
         _params = filter(lambda p: p.requires_grad, self.model.parameters())
         optimizer = global_args['optimizer'](_params, lr=global_args['learning_rate'], weight_decay=global_args['l2reg'])
 
-        test_data_loader = DataLoader(dataset=self.testset, batch_size=global_args['batch_size'], shuffle=False)
+        test_data_loader = DataLoader(dataset=self.devset, batch_size=global_args['batch_size'], shuffle=False)
         valset_len = len(self.trainset) // global_args['cross_val_fold']
         splitedsets = random_split(self.trainset, tuple([valset_len] * (global_args['cross_val_fold'] - 1) + [len(self.trainset) - valset_len * (global_args['cross_val_fold'] - 1)]))
 
