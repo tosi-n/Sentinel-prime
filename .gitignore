@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -127,3 +128,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+=======
+# Trained model
+state_dict/
+
+
+# Environments
+sentinel/
+.vscode/
+>>>>>>> Sentinel lands on the darkside of the moon
