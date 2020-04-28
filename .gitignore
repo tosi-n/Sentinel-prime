@@ -4,8 +4,7 @@ __pycache__/
 *$py.class
 
 # Cache file
-*300_logically_embedding_matrix.dat
-*logically_tokenizer.dat
+cache_files/
 
 # C extensions
 *.so
