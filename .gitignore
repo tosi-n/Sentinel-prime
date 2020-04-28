@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Cache file
+300_logically_embedding_matrix.dat
+logically_tokenizer.dat
+
 # C extensions
 *.so
 
