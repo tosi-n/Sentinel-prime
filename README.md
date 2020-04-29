@@ -61,7 +61,7 @@ Trained model on GPU to attain the below metrics measuring accuracy,
 precision, recall and F1-score.
 
 ![Performance
-statistics](/Users/tosi-n/Downloads/metrics_evaluation.png)
+statistics](./MISC/metrics_evaluation.png)
 
 A k-fold cross-validation is used estimate how the model is expected to
 perform in general when used to make predictions on data not used during
