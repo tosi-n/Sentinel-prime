@@ -58,12 +58,12 @@ With constant improvement and development in Natural Language Processing
 seen with deep learning application. Tranformer’s encoder decoder design
 have adopted attention mechanisms, which have enforced the model to pay
 more attention to input sentences with relations to their target entity.
+
 Based on the targeted goal to handle unseen vocabulary, text is divided
-into a limited set of common sub-word units known wordpieces for both
+into a limited set of common sub-word units known as wordpieces for both
 input and output. A data-driven approach that is guarantees to generate
 a deterministic segmentation for any possible sequence of characters is
-adopted using a wordpiece model (WPM) like
-[BERT](https://arxiv.org/abs/1810.04805).
+adopted using a wordpiece model (WPM) like BERT.
 
 In order to achieve an entity-based sentiment analysis, an attentional
 encoder network
@@ -108,7 +108,7 @@ search for the sentiment to determine it’s polarity.
 > Original adaptation and code reference can be found
 > [HERE](https://github.com/songyouwei/ABSA-PyTorch)
 
-#### What Next
+#### What Next?
 
   - Improve on model’s ability to handle contrastive sentences by
     building a custom dependency tree parser. This would help in mapping
