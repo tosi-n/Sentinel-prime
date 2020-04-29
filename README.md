@@ -19,6 +19,12 @@ Install requirements
 
 #### Usage
 
+Trained model can be downloaded from
+[trained\_model](https://drive.google.com/open?id=1TwToKoeu9_PPVnktDZ-c2VoJVO3IPPVH)
+link.
+
+> Save model in new directory /state\_dict/
+
 Example notebook with sufficient documentation can be followed in
 [test\_runner.ipynb](https://github.com/tosi-n/Sentinel-prime/blob/master/test_runner.ipynb)
 directory.
