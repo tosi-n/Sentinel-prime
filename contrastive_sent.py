@@ -1,14 +1,8 @@
 '''
 ENTITY SENTIMENT
 This file contains various functions that, given a text and word within the text, estimates sentiment towards the particular word.
-Typically the text should be a sentence and the word should be an entity of interest, for example a person, place, or thing.
-Determination of sentiment is implemented in 3 different ways:
-1. Split method: sentence is split on commas and comparison words. Sentiment is determined from split that contains the word of interest.
-2. Neighborhood method: finds the word in the sentence and looks at nearby words to determine sentiment.
-3. Tree method: creates a dependency tree of the sentence using the Stanford dependency parser. Sentiment is determined by looking at
-words that appear nearby in the tree to the word of interest.
-The function compile_ensemble_sentiment combines all three of these methods and is generally the most robust way to determine sentiment
-towards an entity.
+When a sentence and entity come up within a sentence it become a contrastive conjunction or negation.
+Split method: sentence is split on commas and comparison words. Sentiment is determined from split that contains the entity of interest.
 '''
 
 
@@ -16,9 +10,6 @@ towards an entity.
 # from spacy import displacy
 # import en_core_web_sm
 # nlp = en_core_web_sm.load()
-
-# from model import load_n_predict
-# from aen import AEN_BERT
 
 
 # model = load_n_predict(AEN_BERT)
@@ -34,7 +25,7 @@ def search(a_str, sub):
         yield start
         start += len(sub) # use start += 1 to find overlapping matches
 
-def split_sentiment(sentence, entity):
+def split_sentiment(model, sentence, entity):
     '''
     Split the sentence by comparison words and commas. Determine which sections the entity is in.
     Return average sentiment for those sections.
@@ -75,10 +66,12 @@ def split_sentiment(sentence, entity):
             cleaned_section = section.replace(entity.lower(), '')
             # return cleaned_section
             sentiment.append(model.predict(cleaned_section, entity, cleaned_section))
-    if int(str(sentiment).strip('[]')) == 0:
-      print('Sentiment for {} is Negative'.format(entity)) 
-    else:
-      print('Sentiment for {} is Positive'.format(entity))           
+            sentiment = int(str(sentiment).strip('[]'))
+            return sentiment
+    # if  == 0:
+    #   print('Sentiment for {} is Negative'.format(entity)) 
+    # else:
+    #   print('Sentiment for {} is Positive'.format(entity))            
 
 
 

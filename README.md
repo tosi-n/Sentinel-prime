@@ -5,6 +5,28 @@ APR 29, 2020
 
 Attention encoder network for entity-based sentiment analysis
 
+#### Setup
+
+With VENV Create a new virtual environment and install packages.
+
+> virtualenv -p python3 venv
+
+> source ./venv/bin/activate
+
+Install requirements
+
+> pip3 install requirements.txt
+
+#### Usage
+
+Example notebook with sufficient documentation can be followed in
+[test\_runner.ipynb](https://github.com/tosi-n/Sentinel-prime/blob/master/test_runner.ipynb)
+directory.
+
+Hyperparameters can be tweaked through dictionary found in
+[config/global\_args.py](https://github.com/tosi-n/Sentinel-prime/blob/master/config/global_args.py)
+directory.
+
 <hr>
 
 </hr>
@@ -71,7 +93,7 @@ split.
 
 Predicting contrastive sentences whenever 2 sentiments and entities come
 up within a sentence is solved by compiling a list of contrastive words
-used in senteences, then search through input sentence for contrastive
+used in sentences, then search through input sentence for contrastive
 words and split then sentence into 2 at that point. This then allows the
 AEN model to concetrate on the part of the sentence entity appears and
 search for the sentiment to determine it’s polarity.
@@ -88,12 +110,24 @@ search for the sentiment to determine it’s polarity.
 
 #### What Next
 
+  - Improve on model’s ability to handle contrastive sentences by
+    building a custom dependency tree parser. This would help in mapping
+    dependencies and making sentiment predictions when combined as an
+    ensemble prediction from both the split and dependency tree parsing
+    method.
+  - Model requires more data for improved predictions and higher
+    F1-score.
+
 #### References
 
   - BERT: Pre-training of Deep Bidirectional Transformers for Language
     Understanding - Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina
     Toutanova
+  - Google’s Neural Machine Translation System: Bridging the Gap between
+    Human and Machine Translation Yonghui Wu, Mike Schuster, Zhifeng
+    Chen, Quoc V. Le, Mohammad Norouzi
   - Attentional Encoder Network for Targeted Sentiment Classification -
     Youwei Song, Jiahai Wang, Tao Jiang, Zhiyue Liu, Yanghui Rao
+  - <https://mccormickml.com/2019/05/14/BERT-word-embeddings-tutorial/>
   - <https://github.com/songyouwei/ABSA-PyTorch>
   - <http://jalammar.github.io/illustrated-transformer/>
