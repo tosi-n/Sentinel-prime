@@ -69,6 +69,8 @@ class tsc:
 
     def train(self, criterion, optimizer, train_data_loader, val_data_loader):
         max_val_acc = 0
+        # max_val_precision = 0
+        # max_val_recall = 0
         max_val_f1 = 0
         global_step = 0
         path = None
@@ -98,8 +100,8 @@ class tsc:
                     train_loss = loss_total / n_total
                     logger.info('loss: {:.4f}, acc: {:.4f}'.format(train_loss, train_acc))
 
-            val_acc, val_f1 = self.evaluate_acc_f1(val_data_loader)
-            logger.info('> val_acc: {:.4f}, val_f1: {:.4f}'.format(val_acc, val_f1))
+            val_acc, val_precision, val_recall, val_f1 = self.evaluate_acc_f1(val_data_loader)
+            logger.info('> val_acc: {:.4f}, val_precision: {:.4f}, val_recall: {:.4f}, val_f1: {:.4f}'.format(val_acc, val_precision, val_recall, val_f1))
             if val_acc > max_val_acc:
                 max_val_acc = val_acc
                 if not os.path.exists('state_dict'):
@@ -134,8 +136,13 @@ class tsc:
                     t_outputs_all = torch.cat((t_outputs_all, t_outputs), dim=0)
 
         acc = n_correct / n_total
+        # precision tp / (tp + fp)
+        precision = metrics.precision_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu())
+        # recall: tp / (tp + fn)
+        recall = metrics.recall_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu())
+        # f1: 2 tp / (2 tp + fp + fn)
         f1 = metrics.f1_score(t_targets_all.cpu(), torch.argmax(t_outputs_all, -1).cpu(), labels=[0, 1, 2], average='macro')
-        return acc, f1
+        return acc, precision, recall, f1
 
     def train_model(self):
         # Loss and Optimizer
@@ -148,7 +155,7 @@ class tsc:
         valset_len = len(self.trainset) // global_args['cross_val_fold']
         splitedsets = random_split(self.trainset, tuple([valset_len] * (global_args['cross_val_fold'] - 1) + [len(self.trainset) - valset_len * (global_args['cross_val_fold'] - 1)]))
 
-        all_test_acc, all_test_f1 = [], []
+        all_test_acc, all_test_precision, all_test_recall, all_test_f1 = [], [], [], []
         for fid in range(global_args['cross_val_fold']):
             logger.info('fold : {}'.format(fid))
             logger.info('>' * 100)
@@ -161,14 +168,16 @@ class tsc:
             best_model_path = self.train(criterion, optimizer, train_data_loader, val_data_loader)
 
             self.model.load_state_dict(torch.load(best_model_path))
-            test_acc, test_f1 = self.evaluate_acc_f1(test_data_loader)
+            test_acc, test_precision, test_recall, test_f1 = self.evaluate_acc_f1(test_data_loader)
             all_test_acc.append(test_acc)
+            all_test_precision.append(test_precision)
+            all_test_recall.append(test_recall)
             all_test_f1.append(test_f1)
-            logger.info('>> test_acc: {:.4f}, test_f1: {:.4f}'.format(test_acc, test_f1))
+            logger.info('>> test_acc: {:.4f}, test_precision: {:.4f}, test_recall: {:.4f}, test_f1: {:.4f}'.format(test_acc, test_precision, test_recall, test_f1))
 
-        mean_test_acc, mean_test_f1 = numpy.mean(all_test_acc), numpy.mean(all_test_f1)
+        mean_test_acc, mean_test_precision, mean_test_recall, mean_test_f1 = numpy.mean(all_test_acc), numpy.mean(all_test_precision), numpy.mean(all_test_recall), numpy.mean(all_test_f1)
         logger.info('>' * 100)
-        logger.info('>>> mean_test_acc: {:.4f}, mean_test_f1: {:.4f}'.format(mean_test_acc, mean_test_f1))
+        logger.info('>>> mean_test_acc: {:.4f}, mean_test_precision: {:.4f}, mean_test_recall: {:.4f}, mean_test_f1: {:.4f}'.format(mean_test_acc, mean_test_precision, mean_test_recall, mean_test_f1))
 
 
 
@@ -194,5 +203,8 @@ class load_n_predict():
 
         outputs = self.model(inputs)
         t_probs = F.softmax(outputs, dim=-1).cpu().numpy()
+        sentiment = t_probs.argmax(axis=-1) - 1
         print('t_probs = ', t_probs)
-        print('Entity sentiment = ', t_probs.argmax(axis=-1) - 1)
+        sentiment = int(str(sentiment).strip('[]'))
+        print('Entity sentiment = {}'.format(sentiment))
+        return sentiment

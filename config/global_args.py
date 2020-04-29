@@ -6,10 +6,11 @@ global_args = {
     "dataset": "logically",
     "trainset": "./data/train.csv",
     "devset": "./data/dev.csv",
+    # "testset": "./data/test.csv",
     "state_dict_path": "state_dict/aen_bert_logically_val_temp",
     "optimizer": torch.optim.Adam,
     "initializer": torch.nn.init.xavier_uniform_,
-    "learning_rate": 2e-5,
+    "learning_rate": 2e-5, #5e-5, 3e-5, 2e-5
     "dropout": 0.1,
     "l2reg": 0.01,
     "num_epoch": 10,
@@ -19,7 +20,7 @@ global_args = {
     "device": torch.device('cuda' if torch.cuda.is_available() else 'cpu'),
     "seed": 3333,
     "cross_val_fold": 10,
-    "log_step": 10,
+    "log_step": 10, #10, 5
     "embed_dim": 300,
     "hidden_dim": 300,
     "bert_dim": 768,

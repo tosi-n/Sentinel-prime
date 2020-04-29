@@ -79,6 +79,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+test_constra_sent.ipynb
 
 # IPython
 profile_default/
