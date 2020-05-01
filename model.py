@@ -14,7 +14,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, random_split, ConcatDataset
 
-from config.pre_process import build_tokenizer, build_embedding_matrix, Tokenizer4Bert, ABSADataset, prepare_data
+from config.pre_process import Tokenizer4Bert, ABSADataset, prepare_data
 
 from aen import CrossEntropyLoss_LSR, AEN_BERT
 
@@ -37,9 +37,6 @@ class tsc:
         self.trainset = ABSADataset(global_args['trainset'], tokenizer)
         self.devset = ABSADataset(global_args['devset'], tokenizer)
 
-        # if global_args['device'] == 'cuda':
-        #     logger.info('cuda memory allocated: {}'.format(torch.cuda.memory_allocated(device=global_args['device'].index)))
-        # self._print_args()
 
     def _print_args(self):
         n_trainable_params, n_nontrainable_params = 0, 0
