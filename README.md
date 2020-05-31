@@ -9,13 +9,15 @@ Attention encoder network for entity-based sentiment analysis
 
 With VENV Create a new virtual environment and install packages.
 
-> virtualenv -p python3 venv
+```
+virtualenv -p python3 venv
 
-> source ./venv/bin/activate
-
+source ./venv/bin/activate
+```
 Install requirements
-
-> pip3 install requirements.txt
+```
+pip3 install -r requirements.txt
+```
 
 #### Usage
 
